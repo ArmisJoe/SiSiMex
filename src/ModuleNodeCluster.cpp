@@ -152,10 +152,15 @@ void ModuleNodeCluster::OnPacketReceived(TCPSocketPtr socket, InputMemoryStream 
 	//iLog << "OnPacketReceived";
 
 	// TODO 1: Declare a PacketHeader and deserialize it
+	PacketHeader packetHead;
+	packetHead.Read(stream);
 
 	// TODO 2: With the deserialized agent Id, get the agent in the system (ModuleAgentContainer::getAgent)
+	AgentPtr aPtr = App->agentContainer->getAgent(packetHead.srcAgentId);
 
 	// TODO 3: If the agent was found, redirect the input stream to its Agent::OnPacketReceived method
+	if (aPtr != nullptr)
+		aPtr->OnPacketReceived(socket, packetHead, stream);
 }
 
 void ModuleNodeCluster::OnDisconnected(TCPSocketPtr socket)

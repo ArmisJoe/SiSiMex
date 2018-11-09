@@ -85,5 +85,19 @@ public:
 };
 
 // TODO: PacketUnregisterMCC
+class PacketUnregisterMCC {
+public:
+	uint16_t itemId; // Which item has to be registered?
+	void Read(InputMemoryStream &stream)
+	{
+		// TODO
+		stream.Read(stream);
+	}
+	void Write(OutputMemoryStream &stream)
+	{
+		// TODO
+		stream.Write(stream);
+	}
+};
 
 // TODO: PacketUnregisterMCCAck <-- Do we need an actual data packet? Think...

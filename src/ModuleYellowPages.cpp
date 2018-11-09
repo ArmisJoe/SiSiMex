@@ -148,8 +148,8 @@ void ModuleYellowPages::OnPacketReceived(TCPSocketPtr socket, InputMemoryStream 
 
 		// TODO: Deserialize PacketRegisterMCC (make it in Packets.h first)
 		uint16_t itemId = NULL_ITEM_ID;
-		PacketRegisterMCC packetRegisterMCC;
-		packetRegisterMCC.Read(stream);
+		PacketRegisterMCC inPacketData;
+		inPacketData.Read(stream);
 
 		// Register the MCC into the yellow pages
 		AgentLocation mcc;
@@ -162,13 +162,13 @@ void ModuleYellowPages::OnPacketReceived(TCPSocketPtr socket, InputMemoryStream 
 		std::string hostAddress = socket->RemoteAddress().GetString();
 
 		//Some logging
-		//iLog << " - MCC Agent ID: " << inPacketHead.srcAgentId;
-		//iLog << " - Contributed Item ID: " << inPacketData.itemId;
-		//iLog << " - Remote host address: " << hostAddress;
+		iLog << " - MCC Agent ID: " << inPacketHead.srcAgentId;
+		iLog << " - Contributed Item ID: " << inPacketData.itemId;
+		iLog << " - Remote host address: " << hostAddress;
 
 		// TODO: Serialize and send PacketRegisterMCCAck (make it in Packets.h first)
 		PacketRegisterMCCAck packetRegisterMCCack;
-	//	packetRegisterMCCack.itemId = packetRegisterMCC.itemId;
+		//	packetRegisterMCCack.itemId = packetRegisterMCC.itemId;
 
 		// 1 - Create an OutputMemoryStream
 		OutputMemoryStream outStream;
@@ -184,7 +184,8 @@ void ModuleYellowPages::OnPacketReceived(TCPSocketPtr socket, InputMemoryStream 
 
 		// TODO: Deserialize PacketUnregisterMCC (make it in Packets.h first)
 		uint16_t itemId = NULL_ITEM_ID;
-
+		PacketUnregisterMCC inPacketData;
+		inPacketData.Read(stream);
 		// Unregister the MCC from the yellow pages
 		std::list<AgentLocation> &mccs(_mccByItem[itemId]);
 		for (auto it = mccs.begin(); it != mccs.end();) {
@@ -198,13 +199,18 @@ void ModuleYellowPages::OnPacketReceived(TCPSocketPtr socket, InputMemoryStream 
 			}
 		}
 
-		//iLog << " - MCC Agent ID: " << inPacketHead.srcAgentId;
-		//iLog << " - Contributed Item ID: " << inPacketData.itemId;
+		iLog << " - MCC Agent ID: " << inPacketHead.srcAgentId;
+		iLog << " - Contributed Item ID: " << inPacketData.itemId;
 
 		// TODO: Serialize and send PacketRegisterMCCAck (make the packet in Packets.h first)
+		PacketRegisterMCCAck packetRegisterMCCack;
 		// 1 - Create an OutputMemoryStream
+		OutputMemoryStream outStream;
 		// 2 - Create a PacketHeader and fill it
+		PacketHeader outPacketHead;
+		outPacketHead.Write(outStream);
 		// 3 - Send the packet through the socket
+		socket->SendPacket(&outPacketHead, sizeof(PacketHeader));
 	}
 }
 

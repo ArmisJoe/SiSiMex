@@ -55,8 +55,9 @@ void MCC::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 	if (state() == ST_REGISTERING && packetHeader.packetType == PacketType::RegisterMCCAck)
 	{
 		// TODO: Set the next state (Idle in this case)
-
+		setState(ST_IDLE);
 		// TODO: Disconnect the socket (we don't need it anymore)
+		socket->Disconnect();
 	}
 
 	// TODO: Do the same for unregistering
@@ -75,25 +76,35 @@ bool MCC::negotiationAgreement() const
 bool MCC::registerIntoYellowPages()
 {
 	// TODO: Create a PacketHeader (make it in Packets.h)
+	PacketHeader packetHeader;
 
 	// TODO: Create a PacketRegisterMCC (make it in Packets.h)
+	PacketRegisterMCC inPacketData;
 
 	// TODO: Serialize both packets into an OutputMemoryStream
+	OutputMemoryStream outMemStream(sizeof(packetHeader) + sizeof(inPacketData));
+	outMemStream.Write(packetHeader);
+	outMemStream.Write(inPacketData);
 
 	// TODO: Send the stream (Agent::sendPacketToYellowPages)
-
+	sendPacketToYellowPages(outMemStream);
 	return false;
 }
 
 bool MCC::unregisterFromYellowPages()
 {
 	// TODO: Create a PacketHeader (make it in Packets.h)
+	PacketHeader packetHeader;
 
 	// TODO: Create a PacketUnregisterMCC (make it in Packets.h)
+	PacketUnregisterMCC outPacketData;
 
 	// TODO: Serialize both packets into an OutputMemoryStream
+	OutputMemoryStream outMemStream(sizeof(packetHeader) + sizeof(outPacketData));
+	outMemStream.Write(packetHeader);
+	outMemStream.Write(outPacketData);
 
 	// TODO: Send the stream (Agent::sendPacketToYellowPages)
-
+	sendPacketToYellowPages(outMemStream);
 	return false;
 }
