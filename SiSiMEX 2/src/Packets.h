@@ -1,6 +1,7 @@
 #pragma once
 #include "Globals.h"
 #include "AgentLocation.h"
+#include "ModuleAgentContainer.h"
 
 /**
  * Enumerated type for packets.
@@ -79,6 +80,7 @@ using PacketUnregisterMCC = PacketRegisterMCC;
  * The information is the same required for PacketRegisterMCC so...
  */
 // TODO
+using PacketQueryMCCsForItem = PacketRegisterMCC;
 
 /**
  * class PacketReturnMCCsForItem
@@ -88,3 +90,31 @@ using PacketUnregisterMCC = PacketRegisterMCC;
  * with the item specified by the PacketQueryMCCsForItem.
  */
 // TODO
+class PacketReturnMCCsForItem
+{
+public:
+	std::vector<AgentLocation> MCCagents;
+
+	void Read(InputMemoryStream &stream)
+	{
+		int listSize = 0;
+		stream.Read(listSize);
+
+		for (int i = 0; i < listSize; i++)
+		{
+
+		}
+	}
+
+	void Write(OutputMemoryStream &stream)
+	{
+		stream.Write(MCCagents.size());
+
+		for (int i = 0; i < MCCagents.size(); i++)
+		{
+			stream.Write(MCCagents[i]);
+
+		}
+	}
+
+};

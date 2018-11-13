@@ -52,7 +52,11 @@ void MCP::OnPacketReceived(TCPSocketPtr socket, const PacketHeader &packetHeader
 
 		// TODO:
 		// 1) Deserialize the packet
+		PacketReturnMCCsForItem inPacketData;
+		
 		// 2) Log the received MCC agent locations
+		iLog << "MCC agent locations" << inPacketData;
+
 		// 3) Disconnect the socket
 		// 4) Set the next state (ST_ITERATING_OVER_MCCs) to start the search (for the next session)
 	}
